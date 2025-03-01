@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>Australian Sight Words Learning App</title>
+    <style>
+        :root {
+            --primary-color: #006994;
+            --secondary-color: #fcbf49;
+            --text-color: #333;
+            --light-color: #f8f9fa;
+            --correct-color: #4caf50;
+            --incorrect-color: #f44336;
+            --border-radius: 10px;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background-color: var(--light-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        main {
+            flex: 1;
+            padding: 1rem;
+            max-width: 800px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        footer {
+            background-color: var(--primary-color);
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            margin-top: auto;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 2rem;
+            margin: 1rem 0;
+        }
+        
+        .levels-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin: 1rem 0;
+            justify-content: center;
+        }
+        
+        .level-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .level-btn:hover {
+            background-color: #005275;
+        }
+        
+        .level-btn.active {
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+        }
+        
+        .word-display {
+            font-size: 3rem;
+            text-align: center;
+            margin: 2rem 0;
+            height: 4rem;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: #005275;
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+        }
+        
+        .btn-secondary:hover {
+            background-color: #e0a940;
+        }
+        
+        .spelling-container {
+            display: none;
+            margin-top: 2rem;
+        }
+        
+        .input-container {
+            display: flex;
+            margin: 1rem 0;
+        }
+        
+        .spelling-input {
+            flex: 1;
+            padding: 0.75rem;
+            font-size: 1.2rem;
+            border: 2px solid #ddd;
+            border-radius: var(--border-radius) 0 0 var(--border-radius);
+            outline: none;
+        }
+        
+        .check-btn {
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            border: none;
+            border-radius: 0 var(--border-radius) var(--border-radius) 0;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        
+        .feedback {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            text-align: center;
+            font-weight: bold;
+            display: none;
+        }
+        
+        .correct {
+            background-color: var(--correct-color);
+            color: white;
+        }
+        
+        .incorrect {
+            background-color: var(--incorrect-color);
+            color: white;
+        }
+        
+        .progress-container {
+            margin: 1rem 0;
+            background-color: #ddd;
+            border-radius: var(--border-radius);
+            height: 20px;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            border-radius: var(--border-radius);
+            background-color: var(--secondary-color);
+            width: 0%;
+            transition: width 0.5s;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 1rem 0;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .info-section {
+            margin-top: 2rem;
+        }
+        
+        @media (max-width: 600px) {
+            .word-display {
+                font-size: 2.5rem;
+            }
+            
+            .controls {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Australian Sight Words</h1>
+        <p>Learn to read and spell with sight words from the Australian Curriculum</p>
+    </header>
+    
+    <main>
+        <div class="container">
+            <h2>Select a Level</h2>
+            <div class="levels-container">
+                <button class="level-btn active" data-level="foundation">Foundation</button>
+                <button class="level-btn" data-level="year1">Year 1</button>
+                <button class="level-btn" data-level="year2">Year 2</button>
+                <button class="level-btn" data-level="year3">Year 3</button>
+            </div>
+            
+            <div class="mode-toggle">
+                <button class="btn btn-secondary active" id="read-mode">Reading Mode</button>
+                <button class="btn btn-secondary" id="spell-mode">Spelling Mode</button>
+            </div>
+            
+            <div class="word-section">
+                <div class="word-display" id="word-display"></div>
+                <div class="controls">
+                    <button class="btn" id="prev-btn">Previous</button>
+                    <button class="btn" id="speak-btn">Speak Word</button>
+                    <button class="btn" id="next-btn">Next</button>
+                </div>
+                
+                <div class="spelling-container" id="spelling-container">
+                    <div class="input-container">
+                        <input type="text" class="spelling-input" id="spelling-input" placeholder="Type the word...">
+                        <button class="check-btn" id="check-btn">Check</button>
+                    </div>
+                    <div class="feedback" id="feedback"></div>
+                </div>
+                
+                <div class="progress-container">
+                    <div class="progress-bar" id="progress-bar"></div>
+                </div>
+                
+                <div class="stats">
+                    <div class="stat-item">
+                        <h3>Correct</h3>
+                        <p id="correct-count">0</p>
+                    </div>
+                    <div class="stat-item">
+                        <h3>Attempts</h3>
+                        <p id="attempts-count">0</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="container info-section">
+            <h2>About Australian Sight Words</h2>
+            <p>Sight words are commonly used words that young children are encouraged to memorize as a whole by sight, so that they can automatically recognize these words in print without having to decode them.</p>
+            <p>This app follows the Australian Curriculum, focusing on high-frequency words that students need to recognize instantly to become fluent readers.</p>
+            <h3>How to Use This App:</h3>
+            <ul>
+                <li><strong>Reading Mode:</strong> Words will be displayed on screen. Practice reading them aloud.</li>
+                <li><strong>Spelling Mode:</strong> Listen to the word being spoken, then type it correctly.</li>
+                <li><strong>Choose the appropriate year level</strong> for your child's learning stage.</li>
+            </ul>
+        </div>
+    </main>
+    
+    <footer>
+        <p>&copy; 2025 Australian Sight Words Learning App</p>
+    </footer>
+    
+    <script>
+        // Australian sight words by level according to Australian Curriculum
+        const sightWords = {
+            foundation: [
+                'a', 'I', 'am', 'the', 'my', 'is', 'to', 'and', 'we', 'go',
+                'in', 'on', 'at', 'it', 'me', 'he', 'she', 'was', 'for', 'you',
+                'of', 'they', 'are', 'said', 'have', 'like', 'do', 'so', 'see', 'this'
+            ],
+            year1: [
+                'all', 'be', 'by', 'come', 'day', 'from', 'get', 'had', 'has', 'here',
+                'his', 'how', 'if', 'into', 'just', 'look', 'made', 'make', 'more', 'no',
+                'not', 'now', 'one', 'or', 'out', 'some', 'then', 'them', 'there', 'up',
+                'very', 'were', 'what', 'when', 'who', 'will', 'your'
+            ],
+            year2: [
+                'about', 'after', 'again', 'an', 'another', 'as', 'back', 'been', 'before', 'but',
+                'could', 'did', 'down', 'first', 'good', 'her', 'him', 'into', 'little', 'man',
+                'much', 'must', 'new', 'next', 'off', 'oh', 'old', 'once', 'only', 'our',
+                'over', 'people', 'right', 'say', 'saw', 'school', 'should', 'their', 'these', 'thing',
+                'think', 'too', 'two', 'us', 'want', 'way', 'well', 'went', 'where', 'which',
+                'would', 'write'
+            ],
+            year3: [
+                'always', 'around', 'because', 'been', 'before', 'best', 'both', 'buy', 'call', 'cold',
+                'does', 'don\'t', 'fast', 'five', 'found', 'gave', 'goes', 'green', 'its', 'jump',
+                'know', 'let', 'live', 'many', 'most', 'often', 'other', 'play', 'pull', 'put',
+                'read', 'run', 'shall', 'show', 'six', 'small', 'start', 'stop', 'take', 'tell',
+                'thank', 'that\'s', 'their', 'these', 'those', 'together', 'under', 'use', 'warm', 'wash',
+                'wish', 'work', 'would', 'write', 'yellow', 'yes'
+            ]
+        };
+        
+        // Initialize app state
+        let currentLevel = 'foundation';
+        let currentMode = 'read';
+        let currentWordIndex = 0;
+        let stats = {
+            correct: 0,
+            attempts: 0
+        };
+        
+        // Create shuffled copies of the word lists
+        let shuffledWords = {};
+        
+        // DOM elements
+        const wordDisplay = document.getElementById('word-display');
+        const progressBar = document.getElementById('progress-bar');
+        const correctCount = document.getElementById('correct-count');
+        const attemptsCount = document.getElementById('attempts-count');
+        const spellingContainer = document.getElementById('spelling-container');
+        const spellingInput = document.getElementById('spelling-input');
+        const feedback = document.getElementById('feedback');
+        
+        // Fisher-Yates shuffle algorithm
+        function shuffleArray(array) {
+            const newArray = [...array]; // Create a copy to avoid modifying the original
+            for (let i = newArray.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [newArray[i], newArray[j]] = [newArray[j], newArray[i]]; // Swap elements
+            }
+            return newArray;
+        }
+        
+        // Shuffle all word sets
+        function shuffleAllWordSets() {
+            Object.keys(sightWords).forEach(level => {
+                shuffledWords[level] = shuffleArray(sightWords[level]);
+            });
+        }
+        
+        // Initialize the app
+        function initApp() {
+            // Shuffle all word sets on app initialization
+            shuffleAllWordSets();
+            
+            displayCurrentWord();
+            updateProgress();
+            updateStats();
+            
+            // Add event listeners
+            document.querySelectorAll('.level-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    setLevel(btn.dataset.level);
+                });
+            });
+            
+            document.getElementById('read-mode').addEventListener('click', () => {
+                setMode('read');
+            });
+            
+            document.getElementById('spell-mode').addEventListener('click', () => {
+                setMode('spell');
+            });
+            
+            document.getElementById('prev-btn').addEventListener('click', () => {
+                navigateWords(-1);
+            });
+            
+            document.getElementById('next-btn').addEventListener('click', () => {
+                navigateWords(1);
+            });
+            
+            document.getElementById('speak-btn').addEventListener('click', () => {
+                speakCurrentWord();
+            });
+            
+            document.getElementById('check-btn').addEventListener('click', () => {
+                checkSpelling();
+            });
+            
+            spellingInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    checkSpelling();
+                }
+            });
+        }
+        
+        // Set the current level
+        function setLevel(level) {
+            document.querySelectorAll('.level-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            document.querySelector(`.level-btn[data-level="${level}"]`).classList.add('active');
+            
+            currentLevel = level;
+            currentWordIndex = 0;
+            
+            // Reshuffle words when changing levels for variety
+            shuffledWords[currentLevel] = shuffleArray(sightWords[currentLevel]);
+            
+            displayCurrentWord();
+            updateProgress();
+        }
+        
+        // Set the current mode (reading or spelling)
+        function setMode(mode) {
+            currentMode = mode;
+            
+            document.getElementById('read-mode').classList.toggle('active', mode === 'read');
+            document.getElementById('spell-mode').classList.toggle('active', mode === 'spell');
+            
+            spellingContainer.style.display = mode === 'spell' ? 'block' : 'none';
+            wordDisplay.style.visibility = mode === 'read' ? 'visible' : 'hidden';
+            
+            if (mode === 'spell') {
+                speakCurrentWord();
+                spellingInput.focus();
+            }
+        }
+        
+        // Navigate through words (previous/next)
+        function navigateWords(direction) {
+            const wordsCount = shuffledWords[currentLevel].length;
+            
+            currentWordIndex += direction;
+            
+            if (currentWordIndex < 0) {
+                currentWordIndex = wordsCount - 1;
+            } else if (currentWordIndex >= wordsCount) {
+                currentWordIndex = 0;
+            }
+            
+            displayCurrentWord();
+            updateProgress();
+            
+            if (currentMode === 'spell') {
+                speakCurrentWord();
+                spellingInput.value = '';
+                feedback.style.display = 'none';
+                spellingInput.focus();
+            }
+        }
+        
+        // Display the current word
+        function displayCurrentWord() {
+            const currentWord = shuffledWords[currentLevel][currentWordIndex];
+            wordDisplay.textContent = currentWord;
+        }
+        
+        // Update progress bar
+        function updateProgress() {
+            const wordsCount = shuffledWords[currentLevel].length;
+            const progressPercentage = ((currentWordIndex + 1) / wordsCount) * 100;
+            progressBar.style.width = `${progressPercentage}%`;
+        }
+        
+        // Update statistics
+        function updateStats() {
+            correctCount.textContent = stats.correct;
+            attemptsCount.textContent = stats.attempts;
+        }
+        
+        // Speak the current word using the Web Speech API
+        function speakCurrentWord() {
+            const currentWord = shuffledWords[currentLevel][currentWordIndex];
+            
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(currentWord);
+                utterance.rate = 0.8; // Slightly slower for learning
+                utterance.pitch = 1;
+                utterance.volume = 1;
+                
+                // Use Australian accent if available
+                const voices = speechSynthesis.getVoices();
+                const australianVoice = voices.find(voice => 
+                    voice.lang === 'en-AU' || 
+                    voice.name.includes('Australian')
+                );
+                
+                if (australianVoice) {
+                    utterance.voice = australianVoice;
+                }
+                
+                speechSynthesis.speak(utterance);
+            }
+        }
+        
+        // Check spelling in spelling mode
+        function checkSpelling() {
+            const currentWord = shuffledWords[currentLevel][currentWordIndex];
+            const userInput = spellingInput.value.trim().toLowerCase();
+            
+            stats.attempts++;
+            
+            if (userInput === currentWord.toLowerCase()) {
+                stats.correct++;
+                feedback.textContent = 'Correct! Well done!';
+                feedback.className = 'feedback correct';
+                
+                // Move to next word after a short delay
+                setTimeout(() => {
+                    navigateWords(1);
+                }, 1500);
+            } else {
+                feedback.textContent = `Try again! The word is "${currentWord}".`;
+                feedback.className = 'feedback incorrect';
+                
+                // Speak the word again
+                setTimeout(() => {
+                    speakCurrentWord();
+                }, 1000);
+            }
+            
+            feedback.style.display = 'block';
+            updateStats();
+        }
+        
+        // Load voices for speech synthesis
+        function loadVoices() {
+            return new Promise(resolve => {
+                let voices = speechSynthesis.getVoices();
+                if (voices.length) {
+                    resolve(voices);
+                    return;
+                }
+                
+                speechSynthesis.onvoiceschanged = () => {
+                    voices = speechSynthesis.getVoices();
+                    resolve(voices);
+                };
+            });
+        }
+        
+        // Initialize the app when the DOM is loaded
+        document.addEventListener('DOMContentLoaded', async () => {
+            if ('speechSynthesis' in window) {
+                await loadVoices();
+            }
+            initApp();
+        });
+    </script>
+</body>
+</html>
