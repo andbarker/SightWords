@@ -194,7 +194,7 @@
         }
         
         .stats {
-            display: flex;
+            display: none;
             justify-content: space-around;
             margin: 1rem 0;
         }
@@ -437,6 +437,10 @@
             
             spellingContainer.style.display = mode === 'spell' ? 'block' : 'none';
             wordDisplay.style.visibility = mode === 'read' ? 'visible' : 'hidden';
+
+            // Show /hide stats based on mode
+            const statsSection = document.querySelector('.stats');
+            statsSection.style.display = mode ==='spell' ? 'flex' : 'none';
             
             if (mode === 'spell') {
                 speakCurrentWord();
