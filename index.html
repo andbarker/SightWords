@@ -232,15 +232,15 @@
         <div class="container">
             <h2>Select a Level</h2>
             <div class="levels-container">
-                <button class="level-btn active" data-level="foundation">Foundation</button>
-                <button class="level-btn" data-level="year1">Year 1</button>
+                <button class="level-btn" data-level="foundation">Foundation</button>
+                <button class="level-btn active" data-level="year1">Year 1</button>
                 <button class="level-btn" data-level="year2">Year 2</button>
                 <button class="level-btn" data-level="year3">Year 3</button>
             </div>
             
             <div class="mode-toggle">
-                <button class="btn btn-secondary active" id="read-mode">Reading Mode</button>
-                <button class="btn btn-secondary" id="spell-mode">Spelling Mode</button>
+                <button class="btn level-btn active" id="read-mode">Reading Mode</button>
+                <button class="btn level-btn" id="spell-mode">Spelling Mode</button>
             </div>
             
             <div class="word-section">
@@ -290,7 +290,7 @@
     </main>
     
     <footer>
-        <p>&copy; 2025 Australian Sight Words Learning App</p>
+        <p>&copy; 2025 andbarker</p>
     </footer>
     
     <script>
@@ -326,7 +326,7 @@
         };
         
         // Initialize app state
-        let currentLevel = 'foundation';
+        let currentLevel = 'year1';
         let currentMode = 'read';
         let currentWordIndex = 0;
         let stats = {
