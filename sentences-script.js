@@ -244,7 +244,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             const utterance = new SpeechSynthesisUtterance(plainText);
             utterance.lang = 'en-AU';
-            utterance.rate = 0.8; // Slightly slower for clarity
+            utterance.rate = 0.6; // Slightly slower for clarity
             
             // Show reading status
             readingStatus.textContent = 'Reading...';

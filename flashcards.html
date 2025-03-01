@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sight Words | Flashcards</title>
+    <style>
+        :root {
+            --primary: #4A90E2;
+            --primary-dark: #3A75C4;
+            --primary-light: #7FB5FF;
+            --secondary: #FF9166;
+            --secondary-dark: #FF7043;
+            --accent: #66C7FF;
+            --background: #FFFFFF;
+            --background-alt: #F9F9FF;
+            --text: #333333;
+            --text-light: #666666;
+            --success: #8BC34A;
+            --warning: #FFCA28;
+            --error: #FF7043;
+            --shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            --border-radius: 16px;
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+            --font-family: -apple-system, "SF Pro Rounded", "SF Pro Text", BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+            --transition: all 0.2s ease-in-out;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: var(--font-family);
+            color: var(--text);
+            background-color: var(--background-alt);
+            line-height: 1.6;
+            font-size: 18px;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            margin-bottom: var(--spacing-md);
+            font-weight: 700;
+            color: var(--primary-dark);
+        }
+        
+        h2 {
+            font-size: 2rem;
+            letter-spacing: -0.5px;
+        }
+        
+        h3 {
+            font-size: 1.6rem;
+            margin-top: var(--spacing-lg);
+        }
+
+        /* Navigation */
+        .navbar {
+            background-color: var(--primary);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-radius: 0 0 var(--border-radius) var(--border-radius);
+        }
+
+        .navbar-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--spacing-md);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            text-decoration: none;
+        }
+
+        .logo img {
+            height: 40px;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: var(--spacing-lg);
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 600;
+            font-size: 1.1rem;
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+        }
+
+        .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .nav-link.active {
+            background-color: white;
+            color: var(--primary);
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 32px;
+            height: 24px;
+            cursor: pointer;
+        }
+
+        .hamburger span {
+            height: 3px;
+            width: 100%;
+            background-color: white;
+            border-radius: 2px;
+            transition: var(--transition);
+        }
+        
+        /* Main Content */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: var(--spacing-lg);
+        }
+
+        .section {
+            background-color: var(--background);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: var(--spacing-xl);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid #e0e0e0;
+            margin-bottom: var(--spacing-xl);
+            gap: var(--spacing-md);
+        }
+
+        .tab {
+            padding: var(--spacing-md) var(--spacing-lg);
+            cursor: pointer;
+            border-bottom: 4px solid transparent;
+            transition: var(--transition);
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+        }
+
+        .tab:hover {
+            background-color: var(--background-alt);
+        }
+
+        .tab.active {
+            border-bottom: 4px solid var(--primary);
+            color: var(--primary);
+            background-color: var(--primary-light);
+            color: white;
+        }
+        
+        /* Flashcards */
+        .flashcard-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: var(--spacing-xl) 0;
+        }
+
+        .flashcard {
+            width: 100%;
+            max-width: 450px;
+            height: 280px;
+            perspective: 1000px;
+            margin-bottom: var(--spacing-lg);
+            cursor: pointer;
+        }
+
+        .flashcard-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform-style: preserve-3d;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-radius: var(--border-radius);
+            border: 3px solid white;
+        }
+
+        .flashcard.flipped .flashcard-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flashcard-front,
+        .flashcard-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: calc(var(--border-radius) - 4px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: var(--spacing-xl);
+            text-align: center;
+        }
+
+        .flashcard-front {
+            background-color: var(--primary);
+            color: white;
+            background-image: radial-gradient(circle at top right, var(--primary-light), transparent 70%);
+        }
+
+        .flashcard-back {
+            background-color: var(--secondary);
+            color: white;
+            transform: rotateY(180deg);
+            background-image: radial-gradient(circle at top right, #FFAC8A, transparent 70%);
+        }
+
+        .flashcard-word {
+            font-size: 4rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .card-subtitle {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .flashcard-example {
+            font-size: 1.8rem;
+            line-height: 1.5;
+        }
+        
+        .highlight {
+            background-color: rgba(255, 255, 255, 0.3);
+            padding: 0 6px;
+            border-radius: 4px;
+            font-weight: 700;
+        }
+
+        .flashcard-navigation {
+            display: flex;
+            gap: var(--spacing-lg);
+            margin-top: var(--spacing-lg);
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .flashcard-counter {
+            margin-bottom: var(--spacing-md);
+            color: var(--text-light);
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-align: center;
+            width: 100%;
+        }
+        
+        /* Buttons */
+        .btn {
+            padding: 12px 24px;
+            border-radius: var(--border-radius);
+            border: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-md);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            min-width: 140px;
+        }
+
+        .btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--secondary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-outline {
+            background-color: white;
+            border: 3px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+        }
+        
+        .btn-sound {
+            background-color: var(--accent);
+            color: white;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            min-width: unset;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .btn-sound:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px) scale(1.1);
+        }
+
+        /* Icons */
+        .icon {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+        }
+        
+        .icon-large {
+            width: 32px;
+            height: 32px;
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                font-size: 16px;
+            }
+            
+            .hamburger {
+                display: flex;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 70px;
+                left: 0;
+                right: 0;
+                flex-direction: column;
+                background-color: var(--primary);
+                box-shadow: var(--shadow);
+                padding: var(--spacing-lg);
+                transform: translateY(-120%);
+                opacity: 0;
+                pointer-events: none;
+                transition: var(--transition);
+                gap: var(--spacing-lg);
+                border-radius: 0 0 var(--border-radius) var(--border-radius);
+            }
+
+            .nav-links.active {
+                transform: translateY(0);
+                opacity: 1;
+                pointer-events: all;
+            }
+
+            .container {
+                padding: var(--spacing-md);
+            }
+
+            .section {
+                padding: var(--spacing-lg);
+            }
+
+            .tabs {
+                overflow-x: auto;
+                white-space: nowrap;
+                -webkit-overflow-scrolling: touch;
+                scroll-behavior: smooth;
+            }
+
+            .flashcard {
+                max-width: 320px;
+                height: 220px;
+            }
+
+            .flashcard-word {
+                font-size: 3rem;
+            }
+            
+            .flashcard-example {
+                font-size: 1.4rem;
+            }
+            
+            .flashcard-navigation {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .btn {
+                min-width: 120px;
+                padding: 10px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="./index.html" class="logo">
+                <svg class="icon" viewBox="0 0 24 24" width="36" height="36">
+                    <path d="M12,3L1,9L12,15L21,10.09V17H23V9M5,13.18V17.18L12,21L19,17.18V13.18L12,17L5,13.18Z" />
+                </svg>
+                <span class="logo-text">Sight Words</span>
+            </a>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="./index.html" class="nav-link">Home</a></li>
+                <li><a href="./flashcards.html" class="nav-link active">Flashcards</a></li>
+                <li><a href="./quiz.html" class="nav-link">Quiz</a></li>
+                <li><a href="./sentences.html" class="nav-link">Sentences</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Flashcards Section -->
+        <section id="flashcards" class="section">
+            <div class="section-header">
+                <h2>Flashcards</h2>
+                <div>
+                    <span class="flashcard-counter" id="counter">Card 1 of 20</span>
+                </div>
+            </div>
+            <div class="tabs">
+                <div class="tab active" data-level="foundation">Foundation</div>
+                <div class="tab" data-level="year1">Year 1</div>
+                <div class="tab" data-level="year2">Year 2</div>
+                <div class="tab" data-level="year3">Year 3</div>
+            </div>
+            <div class="flashcard-container">
+                <div class="flashcard" id="flashcard">
+                    <div class="flashcard-inner">
+                        <div class="flashcard-front">
+                            <div class="flashcard-word" id="word">and</div>
+                            <div class="card-subtitle pulse">Tap the card to flip</div>
+                        </div>
+                        <div class="flashcard-back">
+                            <div class="flashcard-example" id="example">I like apples <span class="highlight">and</span> oranges.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flashcard-navigation">
+                    <button class="btn btn-outline" id="prev-btn">
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <path d="M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z" />
+                        </svg>
+                        Previous
+                    </button>
+                    
+                    <button class="btn btn-sound" id="sound-btn">
+                        <svg class="icon icon-large" viewBox="0 0 24 24">
+                            <path d="M14,3.23V5.29C16.89,6.15 19,8.83 19,12C19,15.17 16.89,17.84 14,18.7V20.77C18,19.86 21,16.28 21,12C21,7.72 18,4.14 14,3.23M16.5,12C16.5,10.23 15.5,8.71 14,7.97V16C15.5,15.29 16.5,13.76 16.5,12M3,9V15H7L12,20V4L7,9H3Z" />
+                        </svg>
+                    </button>
+                    
+                    <button class="btn btn-outline" id="next-btn">
+                        Next
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // Flashcards data by level
+        const flashcardsData = {
+            foundation: [
+                { word: "a", example: "I have <span class='highlight'>a</span> red ball." },
+                { word: "and", example: "I like apples <span class='highlight'>and</span> bananas." },
+                { word: "the", example: "<span class='highlight'>The</span> cat is sleeping." },
+                { word: "to", example: "I want <span class='highlight'>to</span> play." },
+                { word: "is", example: "The sky <span class='highlight'>is</span> blue." },
+                { word: "in", example: "The toy is <span class='highlight'>in</span> the box." },
+                { word: "it", example: "<span class='highlight'>It</span> is raining today." },
+                { word: "my", example: "This is <span class='highlight'>my</span> book." },
+                { word: "we", example: "<span class='highlight'>We</span> are going to the park." },
+                { word: "on", example: "The cat is <span class='highlight'>on</span> the mat." },
+                { word: "I", example: "<span class='highlight'>I</span> can read this book." },
+                { word: "at", example: "Meet me <span class='highlight'>at</span> school." },
+                { word: "he", example: "<span class='highlight'>He</span> likes to swim." },
+                { word: "for", example: "This present is <span class='highlight'>for</span> you." },
+                { word: "me", example: "Can you help <span class='highlight'>me</span>?" },
+                { word: "with", example: "I play <span class='highlight'>with</span> my friends." },
+                { word: "you", example: "Can <span class='highlight'>you</span> help me?" },
+                { word: "see", example: "I can <span class='highlight'>see</span> a bird." },
+                { word: "like", example: "I <span class='highlight'>like</span> ice cream." },
+                { word: "go", example: "Let's <span class='highlight'>go</span> to the beach." }
+            ],
+            year1: [
+                { word: "they", example: "<span class='highlight'>They</span> are playing football." },
+                { word: "look", example: "<span class='highlight'>Look</span> at that butterfly!" },
+                { word: "here", example: "Come over <span class='highlight'>here</span>." },
+                { word: "said", example: "She <span class='highlight'>said</span> hello to me." },
+                { word: "was", example: "The movie <span class='highlight'>was</span> exciting." },
+                { word: "come", example: "<span class='highlight'>Come</span> and play with us." },
+                { word: "have", example: "I <span class='highlight'>have</span> two cats." },
+                { word: "play", example: "Let's <span class='highlight'>play</span> a game." },
+                { word: "are", example: "Where <span class='highlight'>are</span> you going?" },
+                { word: "this", example: "<span class='highlight'>This</span> is my favourite toy." },
+                { word: "from", example: "The letter is <span class='highlight'>from</span> Grandma." },
+                { word: "of", example: "The colour <span class='highlight'>of</span> the sky is blue." },
+                { word: "one", example: "I have <span class='highlight'>one</span> brother." },
+                { word: "all", example: "We <span class='highlight'>all</span> went to the zoo." },
+                { word: "there", example: "Put it over <span class='highlight'>there</span>." },
+                { word: "do", example: "What do you <span class='highlight'>do</span> at school?" },
+                { word: "when", example: "<span class='highlight'>When</span> is your birthday?" },
+                { word: "out", example: "Let's go <span class='highlight'>out</span> to play." },
+                { word: "what", example: "<span class='highlight'>What</span> is your name?" },
+                { word: "so", example: "I am <span class='highlight'>so</span> happy today." }
+            ],
+            year2: [
+                { word: "some", example: "I have <span class='highlight'>some</span> new toys." },
+                { word: "her", example: "This is <span class='highlight'>her</span> book." },
+                { word: "would", example: "I <span class='highlight'>would</span> like an ice cream." },
+                { word: "their", example: "They left <span class='highlight'>their</span> shoes outside." },
+                { word: "about", example: "Tell me <span class='highlight'>about</span> your holiday." },
+                { word: "into", example: "She went <span class='highlight'>into</span> the garden." },
+                { word: "could", example: "We <span class='highlight'>could</span> see the stars." },
+                { word: "two", example: "I have <span class='highlight'>two</span> brothers." },
+                { word: "more", example: "Can I have <span class='highlight'>more</span> please?" },
+                { word: "then", example: "We had lunch, <span class='highlight'>then</span> went to the park." },
+                { word: "them", example: "Give <span class='highlight'>them</span> the toys." },
+                { word: "but", example: "I like swimming <span class='highlight'>but</span> not diving." },
+                { word: "has", example: "She <span class='highlight'>has</span> a new bike." },
+                { word: "who", example: "<span class='highlight'>Who</span> is your teacher?" },
+                { word: "were", example: "They <span class='highlight'>were</span> at the party." },
+                { word: "get", example: "Let's <span class='highlight'>get</span> ready for school." },
+                { word: "our", example: "This is <span class='highlight'>our</span> classroom." },
+                { word: "your", example: "What is <span class='highlight'>your</span> favourite colour?" },
+                { word: "will", example: "I <span class='highlight'>will</span> see you tomorrow." },
+                { word: "that", example: "Is <span class='highlight'>that</span> your dog?" }
+            ],
+            year3: [
+                { word: "now", example: "We should leave <span class='highlight'>now</span>." },
+                { word: "people", example: "Many <span class='highlight'>people</span> came to the party." },
+                { word: "went", example: "She <span class='highlight'>went</span> to the library." },
+                { word: "little", example: "The <span class='highlight'>little</span> puppy is cute." },
+                { word: "house", example: "My <span class='highlight'>house</span> has a red door." },
+                { word: "too", example: "I like swimming <span class='highlight'>too</span>." },
+                { word: "called", example: "My dog is <span class='highlight'>called</span> Max." },
+                { word: "day", example: "Today is a sunny <span class='highlight'>day</span>." },
+                { word: "made", example: "We <span class='highlight'>made</span> a cake." },
+                { word: "time", example: "What <span class='highlight'>time</span> is it?" },
+                { word: "very", example: "The movie was <span class='highlight'>very</span> good." },
+                { word: "put", example: "<span class='highlight'>Put</span> your toys away." },
+                { word: "by", example: "The book was written <span class='highlight'>by</span> my teacher." },
+                { word: "just", example: "I <span class='highlight'>just</span> finished my homework." },
+                { word: "Mrs", example: "<span class='highlight'>Mrs</span> Jones is our teacher." },
+                { word: "Mr", example: "<span class='highlight'>Mr</span> Smith works at the store." },
+                { word: "make", example: "Let's <span class='highlight'>make</span> a card for Mum." },
+                { word: "came", example: "My friend <span class='highlight'>came</span> to visit." },
+                { word: "asked", example: "She <span class='highlight'>asked</span> for help." },
+                { word: "school", example: "I go to <span class='highlight'>school</span> every day." }
+            ]
+        };
+
+        // DOM elements
+        const flashcard = document.getElementById('flashcard');
+        const wordElement = document.getElementById('word');
+        const exampleElement = document.getElementById('example');
+        const counterElement = document.getElementById('counter');
+        const prevButton = document.getElementById('prev-btn');
+        const nextButton = document.getElementById('next-btn');
+        const soundButton = document.getElementById('sound-btn');
+        const tabs = document.querySelectorAll('.tab');
+        
+        // Speech synthesis
+        const speechSynthesis = window.speechSynthesis;
+        
+        // Current state
+        let currentLevel = 'foundation';
+        let currentIndex = 0;
+        
+        // Update card content
+        function updateCard() {
+            const currentData = flashcardsData[currentLevel];
+            const { word, example } = currentData[currentIndex];
+            
+            wordElement.textContent = word;
+            exampleElement.innerHTML = example;
+            counterElement.textContent = `Card ${currentIndex + 1} of ${currentData.length}`;
+            
+            // Reset card to front face
+            flashcard.classList.remove('flipped');
+            
+            // Update navigation buttons
+            prevButton.disabled = currentIndex === 0;
+            nextButton.disabled = currentIndex === currentData.length - 1;
+            
+            if (prevButton.disabled) {
+                prevButton.style.opacity = '0.5';
+                prevButton.style.cursor = 'not-allowed';
+            } else {
+                prevButton.style.opacity = '1';
+                prevButton.style.cursor = 'pointer';
+            }
+            
+            if (nextButton.disabled) {
+                nextButton.style.opacity = '0.5';
+                nextButton.style.cursor = 'not-allowed';
+            } else {
+                nextButton.style.opacity = '1';
+                nextButton.style.cursor = 'pointer';
+            }
+        }
+        
+        // Speak the current word
+        function speakWord() {
+            if (speechSynthesis) {
+                // Cancel any ongoing speech
+                speechSynthesis.cancel();
+                
+                const utterance = new SpeechSynthesisUtterance(wordElement.textContent);
+                utterance.lang = 'en-AU';
+                utterance.rate = 0.9; // Slightly slower for clarity
+                
+                speechSynthesis.speak(utterance);
+                
+                // Add visual feedback
+                soundButton.classList.add('pulse');
+                setTimeout(() => {
+                    soundButton.classList.remove('pulse');
+                }, 1000);
+            }
+        }
+        
+        // Event Listeners
+        flashcard.addEventListener('click', () => {
+            flashcard.classList.toggle('flipped');
+        });
+        
+        prevButton.addEventListener('click', () => {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateCard();
+            }
+        });
+        
+        nextButton.addEventListener('click', () => {
+            if (currentIndex < flashcardsData[currentLevel].length - 1) {
+                currentIndex++;
+                updateCard();
+            }
+        });
+        
+        soundButton.addEventListener('click', speakWord);
+        
+        // Tab switching
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const level = tab.getAttribute('data-level');
+                
+                // Update active tab
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                // Update current level and reset index
+                currentLevel = level;
+                currentIndex = 0;
+                updateCard();
+            });
+        });
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft' && !prevButton.disabled) {
+                currentIndex--;
+                updateCard();
+            } else if (e.key === 'ArrowRight' && !nextButton.disabled) {
+                currentIndex++;
+                updateCard();
+            } else if (e.key === ' ' || e.key === 'Enter') {
+                flashcard.classList.toggle('flipped');
+            }
+        });
+        
+        // Mobile swipe handling
+        let touchstartX = 0;
+        let touchendX = 0;
+        
+        flashcard.addEventListener('touchstart', e => {
+            touchstartX = e.changedTouches[0].screenX;
+        });
+        
+        flashcard.addEventListener('touchend', e => {
+            touchendX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+        
+        function handleSwipe() {
+            const threshold = 50; // Minimum distance to be considered a swipe
+            
+            if (touchendX + threshold < touchstartX && !nextButton.disabled) {
+                // Swipe left -> next card
+                currentIndex++;
+                updateCard();
+            } else if (touchendX > touchstartX + threshold && !prevButton.disabled) {
+                // Swipe right -> previous card
+                currentIndex--;
+                updateCard();
+            }
+        }
+        
+        // Hamburger menu
+        const hamburger = document.querySelector('.hamburger');
+        const mobileMenu = document.querySelector('.nav-links');
+        
+        hamburger.addEventListener('click', () => {
+            mobileMenu.classList.toggle('active');
+        });
+        
+        // Initialize the first card
+        updateCard();
+    </script>
+</body>
+</html>
