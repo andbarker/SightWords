@@ -440,10 +440,11 @@
 
             // Show /hide stats based on mode
             const statsSection = document.querySelector('.stats');
+            
             statsSection.style.display = mode ==='spell' ? 'flex' : 'none';
             
             if (mode === 'spell') {
-                speakCurrentWord();
+                // speakCurrentWord();
                 spellingInput.focus();
             }
         }
