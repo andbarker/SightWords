@@ -31,9 +31,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Helper function to shuffle an array (Fisher-Yates algorithm)
 function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
+    // Create a copy to avoid modifying the original
+    const shuffled = [...array];
+    
+    for (let i = shuffled.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
     }
-    return array;
+    
+    return shuffled;
 }
+
+// Make available globally
+window.shuffleArray = shuffleArr

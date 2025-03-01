@@ -103,7 +103,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Randomize all flashcard sets
     for (const level in flashcardsData) {
-        flashcardsData[level] = shuffleArray([...flashcardsData[level]]);
+        flashcardsData[level] = window.shuffleArray([...flashcardsData[level]]);
     }    
 
     // DOM elements

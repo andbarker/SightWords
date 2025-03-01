@@ -214,7 +214,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Randomize all flashcard sets
     for (const level in quizData) {
-        quizData[level] = shuffleArray([...quizData[level]]);
+        quizData[level] = window.shuffleArray([...quizData[level]]);
     }    
         
     // DOM elements
