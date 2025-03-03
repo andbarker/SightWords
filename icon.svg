@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Background -->
+  <rect width="512" height="512" rx="128" fill="#4A90E2"/>
+  
+  <!-- Letter blocks/building blocks arranged in a pattern -->
+  <g transform="translate(86, 86) scale(0.94)">
+    <!-- Outer border for all blocks to unify design -->
+    <rect x="0" y="0" width="360" height="360" rx="30" fill="white"/>
+    
+    <!-- Inner grid of colored blocks -->
+    <rect x="30" y="30" width="90" height="90" rx="12" fill="#FF9166"/>
+    <rect x="135" y="30" width="90" height="90" rx="12" fill="#4A90E2"/>
+    <rect x="240" y="30" width="90" height="90" rx="12" fill="#FF9166"/>
+    
+    <rect x="30" y="135" width="90" height="90" rx="12" fill="#4A90E2"/>
+    <rect x="135" y="135" width="90" height="90" rx="12" fill="#FF9166"/>
+    <rect x="240" y="135" width="90" height="90" rx="12" fill="#4A90E2"/>
+    
+    <rect x="30" y="240" width="90" height="90" rx="12" fill="#FF9166"/>
+    <rect x="135" y="240" width="90" height="90" rx="12" fill="#4A90E2"/>
+    <rect x="240" y="240" width="90" height="90" rx="12" fill="#FF9166"/>
+    
+    <!-- Simple letter representations -->
+    <text x="75" y="90" font-family="Arial, sans-serif" font-size="48" font-weight="bold" text-anchor="middle" fill="white">A</text>
+    <text x="180" y="90" font-family="Arial, sans-serif" font-size="48" font-weight="bold" text-anchor="middle" fill="white">B</text>
+    <text x="285" y="90" font-family="Arial, sans-serif" font-size="48" font-weight="bold" text-anchor="middle" fill="white">C</text>
+    
+    <text x="75" y="195" font-family="Arial, sans-serif" font-size="48" font-weight="bold" text-anchor="middle" fill="white">D</text>
+    <text x="180" y="195" font-family="Arial, sans-serif" font-size="48" font-weight="bold" text-anchor="middle" fill="white">E</text>
+    <text x="285" y="195" font-family="Arial, sans-serif" font-size="48" font-weight="bold" text-anchor="middle" fill="white">F</text>
+    
+    <text x="75" y="300" font-family="Arial, sans-serif" font-size="48" font-weight="bold" text-anchor="middle" fill="white">G</text>
+    <text x="180" y="300" font-family="Arial, sans-serif" font-size="48" font-weight="bold" text-anchor="middle" fill="white">H</text>
+    <text x="285" y="300" font-family="Arial, sans-serif" font-size="48" font-weight="bold" text-anchor="middle" fill="white">I</text>
+  </g>
+</svg>
