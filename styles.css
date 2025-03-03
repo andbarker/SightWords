@@ -363,7 +363,7 @@ h3 {
 
 .guide-cards {
     display: grid;
-    grid-template-columns: auto; /*  repeat(auto-fill, minmax(300px, 1fr)); */
+    grid-template-columns: 1fr; /*  repeat(auto-fill, minmax(300px, 1fr)); */
     gap: var(--spacing-lg);
     margin: var(--spacing-xl) 0;
 }
