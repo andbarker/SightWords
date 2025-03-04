@@ -269,7 +269,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const speechSynthesis = window.speechSynthesis;
     
     // Current state
-    let currentLevel = 'foundation';
+    let currentLevel = 'year1';
     let currentIndex = 0;
     
     // Update card content
